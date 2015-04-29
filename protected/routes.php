@@ -13,4 +13,7 @@ return [
 
     '/gallery/albums/<1>' => '/Gallery/Index/AlbumByUrl(url=<1>)',
 
+    '/documents/categories/<1>' => '/Documents/Index/DocumentsByCategory(id=<1>)',
+    '/documents/<1>' => '/Documents/Index/Document(id=<1>)',
+
 ];

@@ -1,0 +1,14 @@
+{% for i, item in items %}
+<article>
+    <div class="main-page-news top-news clearfix">
+        <div class="date-news">{{item.published|date('d.m.Y')}}</div>
+        <div class="title-news">
+            <strong>
+                <a href="/documents/{{item.Pk}}.html" alt="#" title="#">{{item.title}}</a>
+            </strong>
+        </div>
+
+    </div>
+</article>
+
+{% endfor %}

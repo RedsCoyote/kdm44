@@ -1,0 +1,21 @@
+{% for i, item in items %}
+{% if i < 3 %}
+<div class="media" style="margin-top: 0; margin-bottom: 15px;">
+    <div class="media-body">
+        <span class="label label-info">{{item.published|date('d.m.Y')}}</span>
+        <h4 class="media-heading"><a href="/documents/{{item.Pk}}.html">{{item.title}}</a></h4>
+        <div>{{item.text|striptags|raw}}</div>
+    </div>
+</div>
+{% else %}
+<div class="media" style="margin-top: 0; margin-bottom: 15px;">
+    <div class="pull-left">
+        <span class="label label-info">{{item.published|date('d.m.Y')}}</span>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading"><a href="/documents/{{item.Pk}}.html">{{item.title}}</a></h4>
+        <div>{{item.text|striptags|raw}}</div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}

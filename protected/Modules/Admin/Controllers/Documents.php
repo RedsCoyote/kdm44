@@ -4,7 +4,9 @@ namespace App\Modules\Admin\Controllers;
 
 use App\Modules\Documents\Models\Category;
 use App\Modules\Documents\Models\Document;
+use App\Modules\Documents\Models\File;
 use T4\Mvc\Controller;
+use T4\Core\Exception;
 
 class Documents
     extends Controller
@@ -25,7 +27,8 @@ class Documents
 
         $this->data->items = Document::findAll([
             'order' => 'published DESC',
-            'limit'=>[($page-1)*self::PAGE_SIZE, self::PAGE_SIZE]
+            'offset'=> ($page-1)*self::PAGE_SIZE,
+            'limit'=> self::PAGE_SIZE
         ]);
     }
 
@@ -38,6 +41,45 @@ class Documents
             $this->data->item = new Document();
         } else {
             $this->data->item = Document::findByPK($id);
+        }
+    }
+
+    public function actionSave($redirect = 0)
+    {
+        if (!empty($_POST[Document::PK])) {
+            $item = Document::findByPK($_POST[Document::PK]);
+        } else {
+            $item = new Document();
+        }
+        $item->fill($_POST);
+        if ($item->isNew()) {
+            $item->published = date('Y-m-d H:i:s', time());
+        }
+        $item
+            ->uploadFiles('files')
+            ->save();
+        if ($redirect) {
+            $this->redirect('/documents/' . $item->getPk() . '.html');
+        } else {
+            $this->redirect('/admin/documents/');
+        }
+    }
+
+    public function actionDelete($id)
+    {
+        $item = Document::findByPK($id);
+        $item->delete();
+        $this->redirect('/admin/documents/');
+    }
+
+    public function actionDeleteFile($id)
+    {
+        $item = File::findByPK($id);
+        if ($item) {
+            $item->delete();
+            $this->data->result = true;
+        } else {
+            $this->data->result = false;
         }
     }
 
@@ -76,5 +118,66 @@ class Documents
         $this->redirect('/admin/documents/categories/');
     }
 
+    public function actionCategoryUp($id)
+    {
+        $item = Category::findByPK($id);
+        if (empty($item))
+            $this->redirect('/admin/documents/categories');
+        $sibling = $item->getPrevSibling();
+        if (!empty($sibling)) {
+            $item->insertBefore($sibling);
+        }
+        $this->redirect('/admin/documents/categories');
+    }
+
+    public function actionCategoryDown($id)
+    {
+        $item = Category::findByPK($id);
+        if (empty($item))
+            $this->redirect('/admin/documents/categories');
+        $sibling = $item->getNextSibling();
+        if (!empty($sibling)) {
+            $item->insertAfter($sibling);
+        }
+        $this->redirect('/admin/documents/categories');
+    }
+
+    public function actionCategoryMoveBefore($id, $to)
+    {
+        try {
+            $item = Category::findByPK($id);
+            if (empty($item)) {
+                throw new Exception('Source element does not exist');
+            }
+            $destination = Category::findByPK($to);
+            if (empty($destination)) {
+                throw new Exception('Destination element does not exist');
+            }
+            $item->insertBefore($destination);
+            $this->data->result = true;
+        } catch (Exception $e) {
+            $this->data->result = false;
+            $this->data->error = $e->getMessage();
+        }
+    }
+
+    public function actionCategoryMoveAfter($id, $to)
+    {
+        try {
+            $item = Category::findByPK($id);
+            if (empty($item)) {
+                throw new Exception('Source element does not exist');
+            }
+            $destination = Category::findByPK($to);
+            if (empty($destination)) {
+                throw new Exception('Destination element does not exist');
+            }
+            $item->insertAfter($destination);
+            $this->data->result = true;
+        } catch (Exception $e) {
+            $this->data->result = false;
+            $this->data->error = $e->getMessage();
+        }
+    }
 
 }

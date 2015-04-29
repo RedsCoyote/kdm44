@@ -17,7 +17,10 @@ class Category
             'url' => [
                 'type' => 'string',
             ],
-        ]
+        ],
+        'relations' => [
+                'documents' => ['type' => self::HAS_MANY, 'model' => Document::class]
+            ]
     ];
 
     static protected $extensions = ['tree'];

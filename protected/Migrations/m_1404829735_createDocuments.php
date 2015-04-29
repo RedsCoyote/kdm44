@@ -11,22 +11,12 @@ class m_1404829735_createDocuments
     public function up()
     {
         $this->createTable('documents', [
-            '__category_id' => [
-                'type'=>'link'
-            ],
-            'title' => [
-                'type' => 'string',
-                'length' => 1024,
-            ],
-            'published' => [
-                'type' => 'date',
-            ],
-            'text' => [
-                'type' => 'text',
-                'length' => 'big',
-            ],
+            '__category_id' => ['type'=>'link'],
+            'title' => ['type' => 'string', 'length' => 1024,],
+            'published' => ['type' => 'datetime',],
+            'text' => ['type' => 'text', 'length' => 'big',],
         ], [
-            ['columns' => ['published']],
+            'category'=>['columns'=>['__category_id']]
         ]);
     }
 

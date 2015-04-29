@@ -41,6 +41,26 @@
                     <t4:editor name="text">{{item.text}}</t4:editor>
                 </label>
             </section>
+            <section>
+                <label class="label">Файлы</label>
+
+                <div class="row" style="margin: inherit">
+                    {% for file in item.files %}
+                    <div class="col-sm-3" style="padding: 2em;">
+                        <a href="#" class="item-file-delete" data-id="{{file.Pk}}"><i class="fa fa-trash-o fa-2x text-danger"></i>&nbsp;</a>
+                        <a href="{{file.file}}" target="_blank"><i class="fa fa-file-o fa-2x"></i> {{file.file}}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <ul class="list-group" id="uploads">
+                    <li class="list-group-item reserve" style="display: none">{{element('file', 'files[]', {'text':'Выберите файл'})}}</li>
+                    <li class="list-group-item">{{element('file', 'files[]', {'text':'Выберите файл'})}}</li>
+                </ul>
+                <a href="#" onclick="$('#uploads li.reserve').clone().removeClass('reserve').appendTo('#uploads').show();return false;">
+                    <button type="button" class="btn btn-info"><i class="fa fa-plus-circle"></i> Еще один файл</button>
+                </a>
+            </section>
         </fieldset>
         <footer>
             <input id="redirectAfterSave" type="hidden" name="redirect" value="0" />

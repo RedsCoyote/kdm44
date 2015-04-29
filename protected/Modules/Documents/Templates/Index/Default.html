@@ -1,0 +1,25 @@
+{% extends 'Kdm/Inner.html' %}
+
+{% block content %}
+
+<ol class="breadcrumb">
+    <li><a href="/">Главная страница</a></li>
+    <li class="active">Документы</li>
+    <li></li>
+</ol>
+
+{% for category in categories %}
+{% if category.documents is empty %}
+{% else %}
+<section class="panel panel-default">
+    <div class="panel-body">
+        <h1><a href="/documents/categories/{{category.Pk}}.html">{{category.title}}</a></h1>
+        <t4:block path="/Documents//DocumentsByCategory" template="main" id="{{category.Pk}}" count="4"/>
+        <p class="pull-right"><a href="/documents/categories/{{category.Pk}}.html"><i class="glyphicon glyphicon-chevron-right"></i>
+            все документы раздела</a></p>
+    </div>
+</section>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
